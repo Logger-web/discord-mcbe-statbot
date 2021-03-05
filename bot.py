@@ -33,7 +33,7 @@ def ssu_coproc():
 async def server_status_updater():
   
   with concurrent.futures.ProcessPoolExecutor() as pool:
-    bot.loop.run_until_complete(loop.run_in_executor(pool, ssu_coproc))
+    bot.loop.run_until_complete(bot.loop.run_in_executor(pool, ssu_coproc))
 
 @bot.event
 async def on_ready():
