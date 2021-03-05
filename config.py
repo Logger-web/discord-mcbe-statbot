@@ -3,5 +3,5 @@ bot_token='' # ボットのトークン
 prefix='mcb.' # コマンドを使うときのプレフィックス
 
 # Bedrockサーバーの設定
-host='play.rspmcs.jp' # サーバーアドレス
+host='' # サーバーアドレス
 port=19132 # ポート
