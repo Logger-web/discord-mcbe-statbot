@@ -15,6 +15,8 @@ bot = commands.Bot(command_prefix=config.prefix, intents=discord.Intents.default
 def ssu_coproc():
   status = None
   
+  asyncio.set_event_loop(bot.ssu_loop)
+  
   try:
     pt = time.time()
     with mcipc.query.Client(config.host, config.port) as mcbe:
@@ -47,7 +49,8 @@ async def on_ready():
    return
 
   startedFlag = True
-
+  
+  # server_status_updaterのスレッド用イベントループ
   bot.ssu_loop = asyncio.new_event_loop()
 
   server_status_updater.start()
