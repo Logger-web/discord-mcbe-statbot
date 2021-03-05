@@ -6,7 +6,6 @@ from discord.ext import commands, tasks
 
 import mcipc.query
 
-startedFlag = False
 
 bot = commands.Bot(command_prefix=config.prefix,
                    intents=discord.Intents.default())
