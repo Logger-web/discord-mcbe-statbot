@@ -2,8 +2,8 @@ import config
 import discord
 import time
 import gc
-import concurrent.futures
 import asyncio
+import threading
 from discord.ext import commands, tasks
 
 import mcipc.query
@@ -33,8 +33,11 @@ def ssu_coproc():
 @tasks.loop(seconds=30)
 async def server_status_updater():
   
-  with concurrent.futures.ProcessPoolExecutor() as pool:
-    bot.ssu_loop.run_until_complete(bot.ssu_loop.run_in_executor(pool, ssu_coproc))
+  # 固まるらしいのでスレッディングを使って別で動かすようにした
+  
+  ssu_thread = threading.Thread(target=ssu_coproc)
+  ssu_thread.start()
+  ssu_thread.join()
 
 @bot.event
 async def on_ready():
