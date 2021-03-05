@@ -33,7 +33,7 @@ def ssu_coproc():
 async def server_status_updater():
   
   with concurrent.futures.ProcessPoolExecutor() as pool:
-    bot.loop.run_until_complete(bot.loop.run_in_executor(pool, ssu_coproc))
+    bot.ssu_loop.run_until_complete(bot.ssu_loop.run_in_executor(pool, ssu_coproc))
 
 @bot.event
 async def on_ready():
@@ -43,6 +43,8 @@ async def on_ready():
    return
 
   startedFlag = True
+
+  bot.ssu_loop = asyncio.new_event_loop()
 
   server_status_updater.start()
   
