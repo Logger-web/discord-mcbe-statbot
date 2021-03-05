@@ -39,7 +39,8 @@ async def server_status_updater():
 
 @bot.event
 async def on_ready():
-    server_status_updater.start()
     print('準備ができました')
 
+
+server_status_updater.start()
 bot.run(config.bot_token)
