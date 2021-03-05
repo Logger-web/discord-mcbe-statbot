@@ -3,6 +3,7 @@ import discord
 import time
 import gc
 import concurrent.futures
+import asyncio
 from discord.ext import commands, tasks
 
 import mcipc.query
