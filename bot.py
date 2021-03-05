@@ -10,54 +10,61 @@ import mcipc.query
 
 startedFlag = False
 
-bot = commands.Bot(command_prefix=config.prefix, intents=discord.Intents.default())
+bot = commands.Bot(command_prefix=config.prefix,
+                   intents=discord.Intents.default())
+
 
 async def ssu_coproc_do():
-  status = None
-  
-  try:
-    pt = time.time()
-    with mcipc.query.Client(config.host, config.port) as mcbe:
-      status = mcbe.stats(full=True)
-      ping = (time.time()-pt)*1000
-    del mcbe
-    gc.collect()
-      
-  except:
-    asyncio.create_task(bot.change_presence(status=discord.Status.dnd, activity=discord.Game('サーバーがオフラインです')))
-    return
-  
-  st = f'{status.num_players} / {status.max_players} | ping: {ping:.1f}ms'
-  asyncio.create_task(bot.change_presence(status=discord.Status.online, activity=discord.Game(st)))
+    status = None
+
+    try:
+        pt = time.time()
+        with mcipc.query.Client(config.host, config.port) as mcbe:
+            status = mcbe.stats(full=True)
+            ping = (time.time()-pt)*1000
+        del mcbe
+        gc.collect()
+
+    except:
+        asyncio.create_task(bot.change_presence(
+            status=discord.Status.dnd, activity=discord.Game('サーバーがオフラインです')))
+        return
+
+    st = f'{status.num_players} / {status.max_players} | ping: {ping:.1f}ms'
+    asyncio.create_task(bot.change_presence(
+        status=discord.Status.online, activity=discord.Game(st)))
+
 
 def ssu_coproc():
-  
-  asyncio.set_event_loop(bot.ssu_loop)
-  bot.ssu_loop.run_until_complete(ssu_coproc_do())
+
+    asyncio.set_event_loop(bot.ssu_loop)
+    bot.ssu_loop.run_until_complete(ssu_coproc_do())
+
 
 @tasks.loop(seconds=30)
 async def server_status_updater():
-  
-  # 固まるらしいのでスレッディングを使って別で動かすようにした
-  
-  ssu_thread = threading.Thread(target=ssu_coproc)
-  ssu_thread.start()
-  ssu_thread.join()
+
+    # 固まるらしいのでスレッディングを使って別で動かすようにした
+
+    ssu_thread = threading.Thread(target=ssu_coproc)
+    ssu_thread.start()
+    ssu_thread.join()
+
 
 @bot.event
 async def on_ready():
-  global startedFlag
-  
-  if startedFlag:
-   return
+    global startedFlag
 
-  startedFlag = True
-  
-  # server_status_updaterのスレッド用イベントループ
-  bot.ssu_loop = asyncio.new_event_loop()
+    if startedFlag:
+        return
 
-  server_status_updater.start()
-  
-  print('準備ができました')
-  
+    startedFlag = True
+
+    # server_status_updaterのスレッド用イベントループ
+    bot.ssu_loop = asyncio.new_event_loop()
+
+    server_status_updater.start()
+
+    print('準備ができました')
+
 bot.run(config.bot_token)
