@@ -33,7 +33,7 @@ async def ssu_coproc_do():
 def ssu_coproc():
   
   asyncio.set_event_loop(bot.ssu_loop)
-  asyncio.run_until_complete(ssu_coproc_do())
+  bot.ssu_loop.run_until_complete(ssu_coproc_do())
 
 @tasks.loop(seconds=30)
 async def server_status_updater():
