@@ -12,10 +12,8 @@ startedFlag = False
 
 bot = commands.Bot(command_prefix=config.prefix, intents=discord.Intents.default())
 
-def ssu_coproc():
+async def ssu_coproc_do():
   status = None
-  
-  asyncio.set_event_loop(bot.ssu_loop)
   
   try:
     pt = time.time()
@@ -31,6 +29,11 @@ def ssu_coproc():
   
   st = f'{status.num_players} / {status.max_players} | ping: {ping:.1f}ms'
   asyncio.create_task(bot.change_presence(status=discord.Status.online, activity=discord.Game(st)))
+
+def ssu_coproc():
+  
+  asyncio.set_event_loop(bot.ssu_loop)
+  asyncio.run_until_complete(ssu_coproc_do())
 
 @tasks.loop(seconds=30)
 async def server_status_updater():
