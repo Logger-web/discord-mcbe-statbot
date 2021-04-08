@@ -1,6 +1,6 @@
 # Discordボットの設定
-bot_token='' # ボットのトークン
-prefix='mcb.' # コマンドを使うときのプレフィックス
+bot_token='' 
+prefix='ay' # コマンドを使うときのプレフィックス
 
 # Bedrockサーバーの設定
 host='' # サーバーアドレス
